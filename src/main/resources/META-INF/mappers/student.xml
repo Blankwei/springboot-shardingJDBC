@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.dao.TeacherMapper">
+    <resultMap id="teacher" type="com.example.pojo.Teacher">
+        <result property="id" column="id" />
+        <result property="name" column="name" />
+        <result property="sex" column="sex" />
+    </resultMap>
+    <delete id="delete">
+        DELETE FROM teacher WHERE id=#{id}
+    </delete>
+
+    <select id="selectById" resultMap="teacher">
+        SELECT * FROM teacher WHERE id=#{id}
+    </select>
+
+    <select id="selectByIds" resultMap="teacher">
+        SELECT * FROM teacher
+        <if test="list != null and list.size() > 0">
+            WHERE id IN
+            <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+    <select id="findList" resultMap="teacher">
+        select * from teacher where id is not null order by id limit 50
+    </select>
+
+    <insert id="insert">
+        INSERT INTO teacher(sex,name) VALUES (#{sex},#{name})
+    </insert>
+
+    <insert id="insertWithId">
+        INSERT INTO teacher(id,sex,name) VALUES (#{id},#{sex},#{name})
+    </insert>
+
+
+    <update id="update" parameterType="com.example.pojo.Teacher">
+        UPDATE teacher SET sex=#{param2},name=#{param3}
+        Where id=#{param1}
+    </update>
+
+    <select id="findJoin" resultType="java.util.Map">
+        select * from teacher t inner join student s on t.id = s.teacher_id
+    </select>
+
+</mapper>

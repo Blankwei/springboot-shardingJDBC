@@ -1,0 +1,42 @@
+# ??????
+server:
+  port: 8084
+
+spring:
+  shardingsphere:
+    datasource:
+      names:
+        master,slave
+      # ????
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/ds_0?characterEncoding=utf-8&useSSL=false
+        username: root
+        password: root
+      # ????
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/ds_1?characterEncoding=utf-8&useSSL=false
+        username: root
+        password: root
+    masterslave:
+      # ?????? ???????????????????ROUND_ROBIN(??)?RANDOM????
+      load-balance-algorithm-type: round_robin
+      # ????????
+      name: dataSource
+      # ???????
+      master-data-source-name: master
+      # ????????????????
+      slave-data-source-names: slave
+    props:
+      # ??SQL?????false
+      sql:
+        show: true
+
+mybatis:
+  mapper-locations: classpath:META-INF/mappers/student.xml
+  type-aliases-package: com.example.pojo
+  configuration:
+    call-setters-on-nulls: true
